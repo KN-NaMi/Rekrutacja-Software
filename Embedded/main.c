@@ -7,7 +7,7 @@ bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE 16
+#define UART_TX_BUFFER_SIZE 48
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void uart_init(void)
