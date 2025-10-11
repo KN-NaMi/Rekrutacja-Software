@@ -70,7 +70,7 @@ int main()
 
     while (1)
     {
-        stepper_move(DIR_RIGHT, 500);
+        stepper_move(DIR_RIGHT, button_pressed, 500);
 
         HAL_Delay(10);
     }

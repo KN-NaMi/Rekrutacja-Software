@@ -33,7 +33,7 @@ void stepper_init(void)
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
 }
 
-void stepper_move(motor_direction dir, uint32_t steps)
+void stepper_move(motor_direction dir, bool & button_pressed, uint32_t steps)
 {
     if (button_pressed)
     {

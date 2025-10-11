@@ -7,4 +7,4 @@ typedef enum {
 
 void stepper_init(void);
 
-void stepper_move(motor_direction dir, uint32_t steps);
+void stepper_move(motor_direction dir, bool & button_pressed, uint32_t steps);
