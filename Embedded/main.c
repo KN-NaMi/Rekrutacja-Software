@@ -2,6 +2,7 @@
 #include "stepper_driver.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 bool button_pressed = false;
 
