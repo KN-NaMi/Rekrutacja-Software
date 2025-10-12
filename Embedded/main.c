@@ -2,12 +2,13 @@
 #include "stepper_driver.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE 16
+#define UART_TX_BUFFER_SIZE 48
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void uart_init(void)
@@ -69,7 +70,7 @@ int main()
 
     while (1)
     {
-        stepper_move(DIR_RIGHT, 500);
+        stepper_move(DIR_RIGHT, button_pressed, 500);
 
         HAL_Delay(10);
     }
