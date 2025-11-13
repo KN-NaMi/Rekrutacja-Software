@@ -1,4 +1,5 @@
 #include "stm32f4xx_hal.h"
+#include <stdbool.h>
 
 #define STEP_DIR_GPIO_Port  GPIOB
 #define STEP_DIR_Pin        GPIO_PIN_0
@@ -12,3 +13,5 @@
 
 void SystemClock_Config(void);
 void Error_Handler(void);
+
+extern bool button_pressed;
