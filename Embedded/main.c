@@ -7,7 +7,7 @@ bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE 16
+#define UART_TX_BUFFER_SIZE 64
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void uart_init(void)
@@ -64,8 +64,9 @@ int main()
     uart_init();
     button_init();
 
-    sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
-    HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
+    int tx_len = snprintf(tx_buffer, UART_TX_BUFFER_SIZE, "Motor initialized, press button to move.\r\n");
+    if (tx_len > UART_TX_BUFFER_SIZE) { tx_len = UART_TX_BUFFER_SIZE; }
+    HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, tx_len, 100);
 
     while (1)
     {
