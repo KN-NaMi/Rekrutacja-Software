@@ -1,3 +1,6 @@
+#ifndef _STEPPER_DRIVER_H_
+#define _STEPPER_DRIVER_H_
+
 #include "main.h"
 
 typedef enum {
@@ -8,3 +11,5 @@ typedef enum {
 void stepper_init(void);
 
 void stepper_move(MotorDirection dir, uint32_t steps);
+
+#endif
