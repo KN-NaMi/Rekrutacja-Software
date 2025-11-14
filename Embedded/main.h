@@ -1,3 +1,6 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 #include "stm32f4xx_hal.h"
 
 #define STEP_DIR_GPIO_Port  GPIOB
@@ -11,3 +14,6 @@
 
 
 void SystemClock_Config(void);
+
+#endif
+
