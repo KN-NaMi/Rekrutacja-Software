@@ -4,7 +4,8 @@ static volatile uint32_t steps_to_move = 0;
 
 TIM_HandleTypeDef htim2;
 
-void stepper_init(void)
+void
+stepper_init(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -33,7 +34,8 @@ void stepper_init(void)
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
 }
 
-void stepper_move(MotorDirection dir, uint32_t steps)
+void
+stepper_move(MotorDirection dir, uint32_t steps)
 {
     if (button_pressed)
     {
@@ -54,7 +56,8 @@ void stepper_move(MotorDirection dir, uint32_t steps)
     }
 }
 
-void TIM2_IRQHandler(void)
+void
+TIM2_IRQHandler(void)
 {
     if (__HAL_TIM_GET_FLAG(&htim2, TIM_FLAG_UPDATE) != RESET)
     {

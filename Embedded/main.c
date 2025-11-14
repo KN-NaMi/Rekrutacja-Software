@@ -10,7 +10,8 @@ UART_HandleTypeDef huart4;
 #define UART_TX_BUFFER_SIZE 16
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
-void uart_init(void)
+void
+uart_init(void)
 {
     huart4.Instance = UART4;
     huart4.Init.BaudRate = 115200;
@@ -27,7 +28,8 @@ void uart_init(void)
     }
 }
 
-void button_init()
+void
+button_init()
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -42,12 +44,14 @@ void button_init()
     HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 }
 
-void EXTI0_IRQHandler()
+void
+EXTI0_IRQHandler()
 {
     HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_Pin);
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void
+HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == USER_BUTTON_Pin)
     {
@@ -55,7 +59,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
 }
 
-int main()
+int
+main()
 {
     HAL_Init();
     SystemClock_Config();
