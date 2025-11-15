@@ -7,24 +7,24 @@ static volatile uint32_t steps_to_move = 0;
 TIM_HandleTypeDef htim2;
 
 void
-stepper_init()
+stepper_init(GPIO_TypeDef *dir_port, uint32_t dir_pin, GPIO_TypeDef *pulse_port, uint32_t pulse_pin)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_TIM2_CLK_ENABLE();
 
-    GPIO_InitStruct.Pin = STEP_DIR_Pin;
+    GPIO_InitStruct.Pin = dir_pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(STEP_DIR_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = STEP_PULSE_Pin;
+    GPIO_InitStruct.Pin = pulse_pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(STEP_PULSE_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(pulse_port, &GPIO_InitStruct);
 
     htim2.Instance = TIM2;
     htim2.Init.Prescaler = 84 - 1;
@@ -37,17 +37,17 @@ stepper_init()
 }
 
 void
-stepper_move(MotorDirection dir, uint32_t steps)
+stepper_move(GPIO_TypeDef *dir_port, yint32_t dir_pin, MotorDirection dir, uint32_t steps)
 {
     if (button_pressed)
     {
         if (dir == DIR_RIGHT)
         {
-            HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(dir_port, dir_pin, GPIO_PIN_SET);
         }
         else
         {
-            HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(dir_port, dir_pin, GPIO_PIN_RESET);
         }
 
         steps_to_move = steps * 2;
@@ -59,19 +59,19 @@ stepper_move(MotorDirection dir, uint32_t steps)
 }
 
 void
-TIM2_IRQHandler()
+TIM2_IRQHandler(GPIO_TypeDef *pulse_port, uint32_t pulse_pin)
 {
     if (__HAL_TIM_GET_FLAG(&htim2, TIM_FLAG_UPDATE) != RESET)
     {
         if (steps_to_move > 0)
         {
-            HAL_GPIO_TogglePin(STEP_PULSE_GPIO_Port, STEP_PULSE_Pin);
+            HAL_GPIO_TogglePin(pulse_port, pulse_pin);
             steps_to_move--;
         }
         else
         {
 
-            HAL_GPIO_WritePin(STEP_PULSE_GPIO_Port, STEP_PULSE_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(pulse_port, pulse_pin, GPIO_PIN_RESET);
             HAL_TIM_Base_Stop_IT(&htim2);
         }
     }

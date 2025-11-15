@@ -65,7 +65,7 @@ main()
     HAL_Init();
     SystemClock_Config();
 
-    stepper_init();
+    stepper_init(STEP_DIR_GPIO_Port, STEP_DIR_PIN, STEP_PULSE_GPIO_Port, STEP_PULSE_PIN);
     uart_init();
     button_init();
 
@@ -74,7 +74,7 @@ main()
 
     while (1)
     {
-        stepper_move(DIR_RIGHT, 500);
+        stepper_move(STEP_DIR_GPIO_Port, STEP_DIR_Pin, DIR_RIGHT, 500);
 
         HAL_Delay(10);
     }
