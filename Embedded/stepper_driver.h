@@ -1,8 +1,6 @@
 #ifndef STEPPER_DRIVER_H
 #define STEPPER_DRIVER_H
 
-#include "main.h"
-
 typedef enum {
     DIR_LEFT,
     DIR_RIGHT
