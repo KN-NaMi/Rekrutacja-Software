@@ -13,7 +13,7 @@
 #define USER_BUTTON_Pin       GPIO_PIN_0
 
 
-void SystemClock_Config(void);
+void SystemClock_Config();
 
 #endif
 

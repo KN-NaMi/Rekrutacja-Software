@@ -11,7 +11,7 @@ UART_HandleTypeDef huart4;
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void
-uart_init(void)
+uart_init()
 {
     huart4.Instance = UART4;
     huart4.Init.BaudRate = 115200;

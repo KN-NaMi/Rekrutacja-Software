@@ -8,7 +8,7 @@ typedef enum {
     DIR_RIGHT
 } MotorDirection;
 
-void stepper_init(void);
+void stepper_init();
 
 void stepper_move(MotorDirection dir, uint32_t steps);
 

@@ -7,7 +7,7 @@ static volatile uint32_t steps_to_move = 0;
 TIM_HandleTypeDef htim2;
 
 void
-stepper_init(void)
+stepper_init()
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -59,7 +59,7 @@ stepper_move(MotorDirection dir, uint32_t steps)
 }
 
 void
-TIM2_IRQHandler(void)
+TIM2_IRQHandler()
 {
     if (__HAL_TIM_GET_FLAG(&htim2, TIM_FLAG_UPDATE) != RESET)
     {
