@@ -1,3 +1,5 @@
+#include "stm32f4xx_hal.h"
+
 #include "stepper_driver.h"
 
 static volatile uint32_t steps_to_move = 0;
