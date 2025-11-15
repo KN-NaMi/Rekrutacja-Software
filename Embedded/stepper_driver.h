@@ -6,6 +6,13 @@ typedef enum {
     DIR_RIGHT
 } MotorDirection;
 
+struct StepperMotor {
+	GPIO_TypeDef *dir_port;
+	uint32_t dir_pin;
+	GPIO_TypeDef *pulse_port;
+	uint32_t pulse_pin;
+};
+
 void stepper_init();
 
 void stepper_move(MotorDirection dir, uint32_t steps);
