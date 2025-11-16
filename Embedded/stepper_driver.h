@@ -11,11 +11,12 @@ struct StepperMotor {
 	uint32_t dir_pin;
 	GPIO_TypeDef *pulse_port;
 	uint32_t pulse_pin;
+	TIM_HandleTypeDef htim2;
 };
 
-void stepper_init();
+void stepper_init(struct StepperMotor *step_motor, GPIO_TypeDef *dir_port, uint32_t dir_pin, GPIO_TypeDef *pulse_port, uint32_t pulse_pin);
 
-void stepper_move(MotorDirection dir, uint32_t steps);
+void stepper_move(struct StepperMotor *step_motor, MotorDirection dir, uint32_t steps);
 
 #endif
 
