@@ -15,8 +15,15 @@ bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE MAX(sizeof(MOTOR_INIT_TEXT), sizeof(ERROR_TEXT))
+#define UART_TX_BUFFER_SIZE MAX(sizeof(MOTOR_INIT_TEXT), sizeof(ERROR_TEXT)+32)
 char tx_buffer[UART_TX_BUFFER_SIZE];
+
+void uart_init();
+void button_init();
+void EXTI0_IRQHandler();
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+int main();
+void Error_Handler(int err_code);
 
 void
 uart_init()

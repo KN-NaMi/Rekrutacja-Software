@@ -5,6 +5,10 @@
 static volatile uint32_t steps_to_move = 0;
 static struct StepperMotor *active_motor = NULL;
 
+void stepper_init(struct StepperMotor *step_motor, GPIO_TypeDef *dir_port, uint32_t dir_pin, GPIO_TypeDef *pulse_port, uint32_t pulse_pin);
+void stepper_move(struct StepperMotor *step_motor, MotorDirection dir, uint32_t steps);
+void TIM2_IRQHandler();
+
 void
 stepper_init(struct StepperMotor *step_motor, GPIO_TypeDef *dir_port, uint32_t dir_pin, GPIO_TypeDef *pulse_port, uint32_t pulse_pin)
 {
