@@ -44,12 +44,9 @@ void
 stepper_move(struct StepperMotor *step_motor, MotorDirection dir, uint32_t steps)
 {
 	active_motor = step_motor;
-	if (dir == DIR_RIGHT)
-	{
+	if (dir == DIR_RIGHT) {
 		HAL_GPIO_WritePin(step_motor->dir_port, step_motor->dir_pin, GPIO_PIN_SET);
-	}
-	else
-	{
+	} else {
 		HAL_GPIO_WritePin(step_motor->dir_port, step_motor->dir_pin, GPIO_PIN_RESET);
 	}
 
@@ -63,15 +60,11 @@ stepper_move(struct StepperMotor *step_motor, MotorDirection dir, uint32_t steps
 void
 TIM2_IRQHandler()
 {
-	if (active_motor && __HAL_TIM_GET_FLAG(&active_motor->htim2, TIM_FLAG_UPDATE) != RESET)
-	{
-		if (steps_to_move > 0)
-		{
+	if (active_motor && __HAL_TIM_GET_FLAG(&active_motor->htim2, TIM_FLAG_UPDATE) != RESET) {
+		if (steps_to_move > 0) {
 			HAL_GPIO_TogglePin(active_motor->pulse_port, active_motor->pulse_pin);
 			steps_to_move--;
-		}
-		else
-		{
+		} else {
 
 			HAL_GPIO_WritePin(active_motor->pulse_port, active_motor->pulse_pin, GPIO_PIN_RESET);
 			HAL_TIM_Base_Stop_IT(&active_motor->htim2);

@@ -22,8 +22,7 @@ uart_init()
 	huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
 	huart4.Init.OverSampling = UART_OVERSAMPLING_16;
 
-	if (HAL_UART_Init(&huart4) != HAL_OK)
-	{
+	if (HAL_UART_Init(&huart4) != HAL_OK) {
 		Error_Handler();
 	}
 }
@@ -53,8 +52,7 @@ EXTI0_IRQHandler()
 void
 HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (GPIO_Pin == USER_BUTTON_Pin)
-	{
+	if (GPIO_Pin == USER_BUTTON_Pin) {
 		button_pressed = true;
 	}
 }
@@ -74,8 +72,7 @@ main()
 	sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
 	HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
 
-	while (1)
-	{
+	while (1) {
 		if (button_pressed) {
 			stepper_move(&sm, DIR_RIGHT, 500);
 		}
