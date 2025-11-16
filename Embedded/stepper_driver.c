@@ -44,23 +44,20 @@ void
 stepper_move(struct StepperMotor *step_motor, MotorDirection dir, uint32_t steps)
 {
 	active_motor = step_motor;
-    if (button_pressed)
-    {
-        if (dir == DIR_RIGHT)
-        {
-            HAL_GPIO_WritePin(step_motor->dir_port, step_motor->dir_pin, GPIO_PIN_SET);
-        }
-        else
-        {
-            HAL_GPIO_WritePin(step_motor->dir_port, step_motor->dir_pin, GPIO_PIN_RESET);
-        }
+	if (dir == DIR_RIGHT)
+	{
+		HAL_GPIO_WritePin(step_motor->dir_port, step_motor->dir_pin, GPIO_PIN_SET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(step_motor->dir_port, step_motor->dir_pin, GPIO_PIN_RESET);
+	}
 
-        steps_to_move = steps * 2;
+	steps_to_move = steps * 2;
 
-        HAL_TIM_Base_Start_IT(&step_motor->htim2);
+	HAL_TIM_Base_Start_IT(&step_motor->htim2);
 
-        button_pressed = false;
-    }
+	button_pressed = false;
 }
 
 void

@@ -76,7 +76,9 @@ main()
 
     while (1)
     {
-        stepper_move(&sm, DIR_RIGHT, 500);
+		if (button_pressed) {
+			stepper_move(&sm, DIR_RIGHT, 500);
+		}
 
         HAL_Delay(10);
     }
