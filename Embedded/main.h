@@ -1,3 +1,6 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 #include "stm32f4xx_hal.h"
 
 #define STEP_DIR_GPIO_Port  GPIOB
@@ -10,4 +13,7 @@
 #define USER_BUTTON_Pin       GPIO_PIN_0
 
 
-void SystemClock_Config(void);
+void SystemClock_Config();
+
+#endif
+
