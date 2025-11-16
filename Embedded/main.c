@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MOTOR_INIT_TEXT "Motor initialized, press button to move.\r\n"
+
 bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE 16
+#define UART_TX_BUFFER_SIZE sizeof(MOTOR_INIT_TEXT)
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void
@@ -70,7 +72,7 @@ main()
 	uart_init();
 	button_init();
 
-	sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
+	sprintf(tx_buffer, MOTOR_INIT_TEXT);
 	HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
 
 	while (1) {
