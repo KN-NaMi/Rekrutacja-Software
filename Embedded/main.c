@@ -13,50 +13,50 @@ char tx_buffer[UART_TX_BUFFER_SIZE];
 void
 uart_init()
 {
-    huart4.Instance = UART4;
-    huart4.Init.BaudRate = 115200;
-    huart4.Init.WordLength = UART_WORDLENGTH_8B;
-    huart4.Init.StopBits = UART_STOPBITS_1;
-    huart4.Init.Parity = UART_PARITY_NONE;
-    huart4.Init.Mode = UART_MODE_TX_RX;
-    huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-    huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+	huart4.Instance = UART4;
+	huart4.Init.BaudRate = 115200;
+	huart4.Init.WordLength = UART_WORDLENGTH_8B;
+	huart4.Init.StopBits = UART_STOPBITS_1;
+	huart4.Init.Parity = UART_PARITY_NONE;
+	huart4.Init.Mode = UART_MODE_TX_RX;
+	huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart4.Init.OverSampling = UART_OVERSAMPLING_16;
 
-    if (HAL_UART_Init(&huart4) != HAL_OK)
-    {
-        Error_Handler();
-    }
+	if (HAL_UART_Init(&huart4) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }
 
 void
 button_init()
 {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 
-    GPIO_InitStruct.Pin = USER_BUTTON_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(USER_BUTTON_GPIO_Port, &GPIO_InitStruct);
+	GPIO_InitStruct.Pin = USER_BUTTON_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(USER_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
-    HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
-    HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 }
 
 void
 EXTI0_IRQHandler()
 {
-    HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_Pin);
+	HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_Pin);
 }
 
 void
 HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == USER_BUTTON_Pin)
-    {
-        button_pressed = true;
-    }
+	if (GPIO_Pin == USER_BUTTON_Pin)
+	{
+		button_pressed = true;
+	}
 }
 
 int
@@ -64,24 +64,24 @@ main()
 {
 	struct StepperMotor sm;
 
-    HAL_Init();
-    SystemClock_Config();
+	HAL_Init();
+	SystemClock_Config();
 
-    stepper_init(&sm, STEP_DIR_GPIO_Port, STEP_DIR_PIN, STEP_PULSE_GPIO_Port, STEP_PULSE_PIN);
-    uart_init();
-    button_init();
+	stepper_init(&sm, STEP_DIR_GPIO_Port, STEP_DIR_PIN, STEP_PULSE_GPIO_Port, STEP_PULSE_PIN);
+	uart_init();
+	button_init();
 
-    sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
-    HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
+	sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
+	HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
 
-    while (1)
-    {
+	while (1)
+	{
 		if (button_pressed) {
 			stepper_move(&sm, DIR_RIGHT, 500);
 		}
 
-        HAL_Delay(10);
-    }
+		HAL_Delay(10);
+	}
 
-    return 0;
+	return 0;
 }
