@@ -57,8 +57,6 @@ stepper_move(struct StepperMotor *step_motor, MotorDirection dir, uint32_t steps
 	steps_to_move = steps * 2;
 
 	HAL_TIM_Base_Start_IT(&step_motor->htim2);
-
-	button_pressed = false;
 }
 
 void
