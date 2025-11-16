@@ -5,12 +5,17 @@
 #include <string.h>
 
 #define MOTOR_INIT_TEXT "Motor initialized, press button to move.\r\n"
+#define ERROR_TEXT "An error occured: %d\n"
+
+#define ERR_UART_INIT 1
+
+#define MAX(A,B) (((A) > (B)) ? (A) : (B))
 
 bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE sizeof(MOTOR_INIT_TEXT)
+#define UART_TX_BUFFER_SIZE MAX(sizeof(MOTOR_INIT_TEXT), sizeof(ERROR_TEXT))
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void
@@ -26,7 +31,7 @@ uart_init()
 	huart4.Init.OverSampling = UART_OVERSAMPLING_16;
 
 	if (HAL_UART_Init(&huart4) != HAL_OK) {
-		Error_Handler();
+		Error_Handler(ERR_UART_INIT);
 	}
 }
 
@@ -85,3 +90,16 @@ main()
 
 	return 0;
 }
+
+void
+Error_Handler(int err_code)
+{
+	sprintf(tx_buffer, MOTOR_INIT_TEXT, err_code);
+	HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
+
+	/* exit(1) ??? */
+	/* apparently it doesn't exist. */
+	/* fallback: loop. Electricity is cheap anyway */
+	while(1);
+}
+
