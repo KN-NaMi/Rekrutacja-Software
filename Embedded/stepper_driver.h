@@ -1,6 +1,10 @@
+#pragma once
+
+#include <stdint.h>
 #include "main.h"
 
-typedef enum {
+typedef enum
+{
     DIR_LEFT,
     DIR_RIGHT
 } MotorDirection;
