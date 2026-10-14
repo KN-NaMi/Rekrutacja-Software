@@ -1,6 +1,10 @@
 #pragma once
 
-// #include "stm32f4xx_hal.h"  //? pewnie tu bylo sporo deklaracji wiec próbuję się nie czepiać rzeczy które dają error
+#include "stm32f4xx_hal.h"  //? pewnie tu bylo sporo deklaracji wiec próbuję się nie czepiać rzeczy które dają error
+#include <stdbool.h>
+#include <string.h>
+
+extern volatile bool button_pressed;
 
 #define STEP_DIR_GPIO_Port GPIOB
 #define STEP_DIR_Pin       GPIO_PIN_0

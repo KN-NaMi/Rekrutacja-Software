@@ -3,11 +3,11 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-bool button_pressed = false;
+volatile bool button_pressed = false;
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE 16
+#define UART_TX_BUFFER_SIZE 43 //! POWINNO BYĆ MIN 43 (było 16)
 char tx_buffer[UART_TX_BUFFER_SIZE];
 
 void uart_init(void)
@@ -23,7 +23,7 @@ void uart_init(void)
 
     if (HAL_UART_Init(&huart4) != HAL_OK)
     {
-        Error_Handler();
+        Error_Handler(); //! NO IMPLEMENT
     }
 }
 
@@ -40,7 +40,7 @@ void button_init()
 
     HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-} //? why 0 init struct if we add stuff later
+}
 
 void EXTI0_IRQHandler()
 {
@@ -65,7 +65,7 @@ int main()
     button_init();
 
     sprintf(tx_buffer, "Motor initialized, press button to move.\r\n"); //overflow, za mały buffer
-    HAL_UART_Transmit(&huart4, (uint8_t *)tx_buffer, strlen(tx_buffer), 100);
+    HAL_UART_Transmit(&huart4, (uint8_t *)tx_buffer, strlen(tx_buffer), 100); // fixed brak <string.h>
 
     while (1)
     {

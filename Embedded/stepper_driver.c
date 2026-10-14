@@ -35,7 +35,6 @@ void stepper_init(void)
 
 void stepper_move(MotorDirection dir, uint32_t steps)
 {
-    extern bool button_pressed;
     if (button_pressed)
     {
         // if (dir == DIR_RIGHT)
@@ -48,7 +47,7 @@ void stepper_move(MotorDirection dir, uint32_t steps)
         // }
         HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, (dir == DIR_RIGHT) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
-        steps_to_move = steps * 2;
+        steps_to_move = steps * 2; //? steps_to_move będzie się zwiększać??
 
         HAL_TIM_Base_Start_IT(&htim2);
 
