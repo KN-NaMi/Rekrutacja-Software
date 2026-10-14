@@ -35,16 +35,18 @@ void stepper_init(void)
 
 void stepper_move(MotorDirection dir, uint32_t steps)
 {
+    extern bool button_pressed;
     if (button_pressed)
     {
-        if (dir == DIR_RIGHT)
-        {
-            HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_SET);
-        }
-        else
-        {
-            HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_RESET);
-        }
+        // if (dir == DIR_RIGHT)
+        // {
+        //     HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_SET);
+        // }
+        // else
+        // {
+        //     HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_RESET);
+        // }
+        HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, (dir == DIR_RIGHT) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
         steps_to_move = steps * 2;
 
@@ -65,7 +67,6 @@ void TIM2_IRQHandler(void)
         }
         else
         {
-
             HAL_GPIO_WritePin(STEP_PULSE_GPIO_Port, STEP_PULSE_Pin, GPIO_PIN_RESET);
             HAL_TIM_Base_Stop_IT(&htim2);
         }
