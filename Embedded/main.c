@@ -40,7 +40,7 @@ void button_init()
 
     HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-}
+} //? why 0 init struct if we add stuff later
 
 void EXTI0_IRQHandler()
 {
@@ -64,8 +64,8 @@ int main()
     uart_init();
     button_init();
 
-    sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
-    HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
+    sprintf(tx_buffer, "Motor initialized, press button to move.\r\n"); //overflow, za mały buffer
+    HAL_UART_Transmit(&huart4, (uint8_t *)tx_buffer, strlen(tx_buffer), 100);
 
     while (1)
     {
