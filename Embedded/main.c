@@ -1,14 +1,28 @@
 #include "main.h"
 #include "stepper_driver.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 
-bool button_pressed = false;
+#define MOTOR_INIT_PRINT    "Motor initialized, press button to move.\r\n"
+#define UART_TX_BUFFER_SIZE sizeof(MOTOR_INIT_PRINT)
+
+volatile bool button_pressed = false;
+
+char tx_buffer[UART_TX_BUFFER_SIZE];
 
 UART_HandleTypeDef huart4;
 
-#define UART_TX_BUFFER_SIZE 16
-char tx_buffer[UART_TX_BUFFER_SIZE];
+void SystemClock_Config(void)
+{
+    // TODO not implemented
+}
+
+void Error_Handler()
+{
+    for (;;)
+        ; // chyba że printf("\a"); a potem loop
+}
 
 void uart_init(void)
 {
@@ -24,6 +38,24 @@ void uart_init(void)
     if (HAL_UART_Init(&huart4) != HAL_OK)
     {
         Error_Handler();
+    }
+}
+
+void HAL_UART_MspInit(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == UART4)
+    {
+        GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        __HAL_RCC_UART4_CLK_ENABLE();
+
+        GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
     }
 }
 
@@ -64,8 +96,11 @@ int main()
     uart_init();
     button_init();
 
-    sprintf(tx_buffer, "Motor initialized, press button to move.\r\n");
-    HAL_UART_Transmit(&huart4, (uint8_t*)tx_buffer, strlen(tx_buffer), 100);
+    sprintf(tx_buffer, MOTOR_INIT_PRINT);
+    if (HAL_UART_Transmit(&huart4, (uint8_t *)tx_buffer, strlen(tx_buffer), 100) != HAL_OK)
+    {
+        Error_Handler();
+    }
 
     while (1)
     {

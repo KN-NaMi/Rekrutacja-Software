@@ -1,11 +1,13 @@
 #include "stepper_driver.h"
 
 static volatile uint32_t steps_to_move = 0;
+static volatile bool move_active = false;
 
 TIM_HandleTypeDef htim2;
 
 void stepper_init(void)
 {
+    // TODO All timing should depend on SystemClock_Config that's literally what's it's for
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -27,7 +29,8 @@ void stepper_init(void)
     htim2.Init.Prescaler = 84 - 1;
     htim2.Init.Period = 1000 - 1;
     htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-    HAL_TIM_Base_Init(&htim2);
+    if (HAL_TIM_Base_Init(&htim2))
+        Error_Handler();
 
     HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM2_IRQn);
@@ -37,6 +40,13 @@ void stepper_move(MotorDirection dir, uint32_t steps)
 {
     if (button_pressed)
     {
+        button_pressed = false;
+
+        if (move_active)
+        {
+            return;
+        }
+
         if (dir == DIR_RIGHT)
         {
             HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_SET);
@@ -46,11 +56,27 @@ void stepper_move(MotorDirection dir, uint32_t steps)
             HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, GPIO_PIN_RESET);
         }
 
-        steps_to_move = steps * 2;
+        /*
+        # Teoretycznie:
+        ` HAL_GPIO_WritePin(STEP_DIR_GPIO_Port, STEP_DIR_Pin, dir); ` zamiast tego if(dir==DIR_RIGHT){...} calego
+            dir_right    to 1, dir_left       to 0
+            GPIO_PIN_SET to 1, GPIO_PIN_RESET to 0
 
-        HAL_TIM_Base_Start_IT(&htim2);
+        można by bylo skipnac ifa i jakos minimalnie szybciej by mogło byc
 
-        button_pressed = false;
+        Wiadomo że jesli dodamy wiecej w przyszlosci to bedzie chujowo, ale daloby sie z tym pracowac jesli sie pobawimy troche pinami
+        nie bede dawac perf(move->direction) bo to zbyt malo żeby cos nam dalo, wiec bez sensu cokolwiek zmieniac
+        */
+
+        steps_to_move = steps * 2; //! probs will overflow unless i don't know what i'm saying
+        // cuz it's only increasing right
+        move_active = true;
+
+        if (HAL_TIM_Base_Start_IT(&htim2))
+        {
+            move_active = false;
+            Error_Handler();
+        }
     }
 }
 
@@ -68,6 +94,7 @@ void TIM2_IRQHandler(void)
 
             HAL_GPIO_WritePin(STEP_PULSE_GPIO_Port, STEP_PULSE_Pin, GPIO_PIN_RESET);
             HAL_TIM_Base_Stop_IT(&htim2);
+            move_active = false;
         }
     }
 
